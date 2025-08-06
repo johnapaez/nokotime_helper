@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noko Time Helper</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .form-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .form-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        select, input[type="number"], input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .week-section {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .week-title {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+        
+        .week-info {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .add-project-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .add-project-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .project-selector {
+            flex: 1;
+            min-width: 250px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .percentage-input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 80px;
+        }
+        
+        .percentage-input-small {
+            padding: 4px 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 60px;
+            font-size: 0.9rem;
+        }
+        
+        .selected-projects {
+            min-height: 50px;
+        }
+        
+        .selected-project-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            gap: 10px;
+        }
+        
+        .project-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .project-name {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .project-group {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .project-percentage {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .percentage-display {
+            min-width: 20px;
+            font-weight: 600;
+            color: #3498db;
+        }
+        
+        .btn-small {
+            padding: 4px 8px;
+            font-size: 0.9rem;
+            min-width: 30px;
+        }
+        
+        .work-hours-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .work-hour-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .work-hour-item .week-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .work-hour-item .week-dates {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .hour-breakdown div {
+            padding: 3px 0;
+        }
+        
+        .time-off-hours {
+            color: #e74c3c;
+            font-weight: 500;
+        }
+        
+        .available-hours {
+            color: #27ae60;
+            font-weight: 600;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 8px !important;
+            margin-top: 5px;
+        }
+        
+        .preview-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .preview-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .preview-table th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .preview-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .time-off-row {
+            background: #fff8e1;
+        }
+        
+        .rounded-row {
+            background: #f3e5f5;
+        }
+        
+        .adjusted-row {
+            background: #e8f5e8;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .time-off-hours select {
+            width: 120px;
+        }
+        
+        .profile-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .save-profile, .load-profile {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .save-profile h3, .load-profile h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-controls {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+        
+        .total-display {
+            background: #e8f5e8;
+            border: 2px solid #27ae60;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .total-display.warning {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+        
+        .total-display.error {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .time-off-section {
+            background: #fff8e1;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .time-off-item {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+        
+        .time-off-item input {
+            flex: 1;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            font-size: 1.2rem;
+            padding: 15px 40px;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+        
+        .action-buttons {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 500;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🕐 Noko Time Helper</h1>
+            <p>Generate monthly time import files from weekly project percentages</p>
+        </div>
+        
+        <div class="main-content">
+            <!-- Month Selection -->
+            <div class="form-section">
+                <h2>📅 Month Selection</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="year">Year</label>
+                        <select id="year">
+                            <!-- Populated by JavaScript -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="month">Month</label>
+                        <select id="month">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn" onclick="loadMonth()">Load Month</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Time Off Section -->
+            <div class="time-off-section">
+                <h2>🏖️ Time Off / Special Days</h2>
+                <p style="margin-bottom: 15px; color: #666;">Add time off first to calculate available work hours for each week</p>
+                <div id="time-off-entries">
+                    <!-- Populated dynamically -->
+                </div>
+                <button class="btn btn-secondary" onclick="addTimeOffEntry()">Add Time Off Entry</button>
+                <button class="btn btn-primary" onclick="calculateWorkHours()" style="margin-left: 10px;">Calculate Available Work Hours</button>
+            </div>
+            
+            <!-- Work Hours Summary -->
+            <div class="form-section hidden" id="work-hours-summary">
+                <h2>⏰ Available Work Hours Summary</h2>
+                <div id="work-hours-display">
+                    <!-- Populated after time off calculation -->
+                </div>
+            </div>
+            
+            <!-- Weekly Breakdowns -->
+            <div class="form-section hidden" id="weekly-breakdowns-section">
+                <h2>📊 Weekly Project Breakdowns</h2>
+                <div id="weekly-sections">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+            
+            <!-- Preview Section -->
+            <div class="form-section hidden" id="preview-section">
+                <h2>📋 Time Entry Preview</h2>
+                <div id="preview-display">
+                    <!-- Shows calculated time entries before CSV generation -->
+                </div>
+            </div>
+            
+            <!-- Profile Management -->
+            <div class="form-section">
+                <h2>💾 Profile Management</h2>
+                <div class="profile-controls">
+                    <div class="save-profile">
+                        <h3>Save Current Setup</h3>
+                        <div class="form-row">
+                            <input type="text" id="profile-name" placeholder="Profile name (e.g., 'Regular Month', 'Holiday Season')" style="flex: 1;">
+                            <button class="btn btn-secondary" onclick="saveProfile()">Save Profile</button>
+                        </div>
+                    </div>
+                    <div class="load-profile">
+                        <h3>Load Saved Profile</h3>
+                        <div class="form-row">
+                            <select id="profile-selector" style="flex: 1;">
+                                <option value="">Select a saved profile...</option>
+                            </select>
+                            <button class="btn btn-secondary" onclick="loadProfile()">Load Profile</button>
+                            <button class="btn btn-secondary" onclick="refreshProfiles()">Refresh List</button>
+                        </div>
+                        <div class="import-json-section" style="margin-top: 15px;">
+                            <h4>Quick Import JSON Data</h4>
+                            <textarea id="json-import" placeholder="Paste your JSON data here..." style="width: 100%; height: 80px; margin-bottom: 10px;"></textarea>
+                            <button class="btn btn-secondary" onclick="importFromJSON()">Import JSON Data</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="previewTimeEntries()" id="preview-btn" style="display: none;">Preview Time Entries</button>
+                <button class="btn btn-primary" onclick="generateCSV()" id="generate-btn" style="display: none;">Generate CSV File</button>
+            </div>
+            
+            <!-- Loading/Results -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Generating your CSV file...</p>
+            </div>
+            
+            <div id="alerts">
+                <!-- Alerts shown here -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let projects = {};
+        let monthInfo = {};
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProjects();
+            populateYears();
+            setCurrentMonth();
+            refreshProfiles();
+        });
+        
+        async function loadProjects() {
+            try {
+                const response = await fetch('/api/projects');
+                const data = await response.json();
+                projects = data.projects;
+            } catch (error) {
+                showAlert('Error loading projects: ' + error.message, 'error');
+            }
+        }
+        
+        function populateYears() {
+            const yearSelect = document.getElementById('year');
+            const currentYear = new Date().getFullYear();
+            
+            for (let year = currentYear - 1; year <= currentYear + 2; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                if (year === currentYear) option.selected = true;
+                yearSelect.appendChild(option);
+            }
+        }
+        
+        function setCurrentMonth() {
+            const currentMonth = new Date().getMonth() + 1;
+            document.getElementById('month').value = currentMonth;
+        }
+        
+        async function loadMonth() {
+            const year = document.getElementById('year').value;
+            const month = document.getElementById('month').value;
+            
+            if (!year || !month) {
+                showAlert('Please select both year and month', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/month-info/${year}/${month}`);
+                monthInfo = await response.json();
+                
+                if (monthInfo.error) {
+                    showAlert('Error loading month: ' + monthInfo.error, 'error');
+                    return;
+                }
+                
+                createTimeOffSection();
+                showAlert(`Loaded ${monthInfo.month_name} ${year} - ${monthInfo.weeks.length} weeks. Add time off first!`, 'success');
+                
+                // Hide other sections until time off is processed
+                document.getElementById('weekly-breakdowns-section').classList.add('hidden');
+                document.getElementById('work-hours-summary').classList.add('hidden');
+                document.getElementById('preview-section').classList.add('hidden');
+            } catch (error) {
+                showAlert('Error loading month: ' + error.message, 'error');
+            }
+        }
+        
+        function createWeeklySections() {
+            const container = document.getElementById('weekly-sections');
+            container.innerHTML = '';
+            
+            monthInfo.weeks.forEach((week, index) => {
+                const weekDiv = document.createElement('div');
+                weekDiv.className = 'week-section';
+                weekDiv.innerHTML = `
+                    <div class="week-header">
+                        <div class="week-title">Week ${week.week_number}</div>
+                        <div class="week-info">${week.start_date} to ${week.end_date} (${week.work_days} work days)</div>
+                        ${week.week_number > 1 ? `<button class="btn btn-secondary btn-small" onclick="copyFromPreviousWeek(${week.week_number})">Copy from Week ${week.week_number - 1}</button>` : ''}
+                    </div>
+                    <div id="week-${week.week_number}-projects">
+                        ${createProjectInputs(week.week_number)}
+                    </div>
+                    <div class="total-display" id="week-${week.week_number}-total">
+                        Total: <span class="percentage-display">0%</span>
+                    </div>
+                `;
+                container.appendChild(weekDiv);
+            });
+        }
+        
+        function createProjectInputs(weekNumber) {
+            return `
+                <div class="add-project-section">
+                    <div class="add-project-controls">
+                        <select class="project-selector" id="week-${weekNumber}-project-selector">
+                            <option value="">Select a project...</option>
+                            ${Object.keys(projects).filter(key => key !== 'time_off').map(projectKey => {
+                                const project = projects[projectKey];
+                                return `<option value="${projectKey}">${project.name} (${project.group_client})</option>`;
+                            }).join('')}
+                        </select>
+                        <input type="number" 
+                               class="percentage-input" 
+                               id="week-${weekNumber}-percentage-input"
+                               min="0" 
+                               max="100" 
+                               step="0.5"
+                               placeholder="%" 
+                               style="width: 80px;">
+                        <button class="btn btn-secondary" onclick="addProjectToWeek(${weekNumber})">Add Project</button>
+                    </div>
+                    <div class="selected-projects" id="week-${weekNumber}-selected-projects">
+                        <!-- Selected projects will appear here -->
+                    </div>
+                </div>
+            `;
+        }
+        
+        function addProjectToWeek(weekNumber) {
+            const selector = document.getElementById(`week-${weekNumber}-project-selector`);
+            const percentageInput = document.getElementById(`week-${weekNumber}-percentage-input`);
+            
+            const projectKey = selector.value;
+            const percentage = parseFloat(percentageInput.value);
+            
+            if (!projectKey) {
+                showAlert('Please select a project', 'error');
+                return;
+            }
+            
+            if (!percentage || percentage <= 0) {
+                showAlert('Please enter a valid percentage', 'error');
+                return;
+            }
+            
+            // Check if project already added
+            const container = document.getElementById(`week-${weekNumber}-selected-projects`);
+            if (container.querySelector(`[data-project="${projectKey}"]`)) {
+                showAlert('Project already added to this week', 'error');
+                return;
+            }
+            
+            const project = projects[projectKey];
+            
+            // Create project item
+            const projectDiv = document.createElement('div');
+            projectDiv.className = 'selected-project-item';
+            projectDiv.setAttribute('data-project', projectKey);
+            projectDiv.innerHTML = `
+                <div class="project-info">
+                    <span class="project-name">${project.name}</span>
+                    <span class="project-group">(${project.group_client})</span>
+                </div>
+                <div class="project-percentage">
+                    <input type="number" 
+                           class="percentage-input-small" 
+                           value="${percentage}"
+                           min="0" 
+                           max="100" 
+                           step="0.5"
+                           onchange="updateWeekTotal(${weekNumber})">
+                    <span class="percentage-display">%</span>
+                </div>
+                <button class="btn btn-danger btn-small" onclick="removeProjectFromWeek(${weekNumber}, '${projectKey}')">×</button>
+            `;
+            
+            container.appendChild(projectDiv);
+            
+            // Clear inputs
+            selector.value = '';
+            percentageInput.value = '';
+            
+            // Update total
+            updateWeekTotal(weekNumber);
+        }
+        
+        function removeProjectFromWeek(weekNumber, projectKey) {
+            const container = document.getElementById(`week-${weekNumber}-selected-projects`);
+            const projectDiv = container.querySelector(`[data-project="${projectKey}"]`);
+            if (projectDiv) {
+                projectDiv.remove();
+                updateWeekTotal(weekNumber);
+            }
+        }
+        
+        function updateWeekTotal(weekNumber) {
+            let total = 0;
+            const container = document.getElementById(`week-${weekNumber}-selected-projects`);
+            
+            if (container) {
+                const percentageInputs = container.querySelectorAll('.percentage-input-small');
+                percentageInputs.forEach(input => {
+                    total += parseFloat(input.value) || 0;
+                });
+            }
+            
+            const totalDisplay = document.getElementById(`week-${weekNumber}-total`);
+            const percentageSpan = totalDisplay.querySelector('.percentage-display');
+            percentageSpan.textContent = total.toFixed(1) + '%';
+            
+            // Color coding
+            totalDisplay.className = 'total-display';
+            if (total > 100) {
+                totalDisplay.classList.add('error');
+            } else if (total > 0 && total < 100) {
+                totalDisplay.classList.add('warning');
+            }
+        }
+        
+        function createTimeOffSection() {
+            const container = document.getElementById('time-off-entries');
+            container.innerHTML = `
+                <div class="time-off-item">
+                    <input type="date" placeholder="Date" class="time-off-date">
+                    <select class="time-off-hours">
+                        <option value="">Hours...</option>
+                        <option value="0.5">0.5 hours</option>
+                        <option value="1">1.0 hours</option>
+                        <option value="1.5">1.5 hours</option>
+                        <option value="2">2.0 hours</option>
+                        <option value="2.5">2.5 hours</option>
+                        <option value="3">3.0 hours</option>
+                        <option value="3.5">3.5 hours</option>
+                        <option value="4">4.0 hours</option>
+                        <option value="4.5">4.5 hours</option>
+                        <option value="5">5.0 hours</option>
+                        <option value="5.5">5.5 hours</option>
+                        <option value="6">6.0 hours</option>
+                        <option value="6.5">6.5 hours</option>
+                        <option value="7">7.0 hours</option>
+                        <option value="7.5">7.5 hours</option>
+                        <option value="8">8.0 hours (Full Day)</option>
+                    </select>
+                    <input type="text" placeholder="Description (optional)" class="time-off-desc">
+                    <button class="btn btn-danger" onclick="removeTimeOffEntry(this)">Remove</button>
+                </div>
+            `;
+        }
+        
+        function calculateWorkHours() {
+            if (!monthInfo.weeks) {
+                showAlert('Please load a month first', 'error');
+                return;
+            }
+            
+            // Collect time off data
+            const timeOffData = {};
+            document.querySelectorAll('.time-off-item').forEach(item => {
+                const date = item.querySelector('.time-off-date').value;
+                const hoursSelect = item.querySelector('.time-off-hours');
+                const hours = parseFloat(hoursSelect.value);
+                const description = item.querySelector('.time-off-desc').value;
+                
+                if (date && hours > 0) {
+                    timeOffData[date] = {
+                        hours: hours,
+                        description: description || 'Time off'
+                    };
+                }
+            });
+            
+            console.log('Time off data collected:', timeOffData);
+            
+            // Calculate available work hours per week
+            const weeklyHours = {};
+            monthInfo.weeks.forEach(week => {
+                let totalWorkHours = week.work_days * 8; // Standard 8-hour days
+                let timeOffHours = 0;
+                
+                console.log(`Processing week ${week.week_number}: ${week.start_date} to ${week.end_date} (${week.work_days} work days)`);
+                
+                // Check each day in the week for time off
+                for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
+                    const checkDate = new Date(week.start_date + 'T00:00:00'); // Force UTC midnight
+                    checkDate.setDate(checkDate.getDate() + dayOffset);
+                    const dateStr = checkDate.toISOString().split('T')[0];
+                    
+                    if (timeOffData[dateStr]) {
+                        // If it's a weekday in our target month
+                        const month = parseInt(document.getElementById('month').value);
+                        const year = parseInt(document.getElementById('year').value);
+                        
+                        if (checkDate.getMonth() + 1 === month && 
+                            checkDate.getFullYear() === year && 
+                            checkDate.getDay() !== 0 && checkDate.getDay() !== 6) {
+                            timeOffHours += timeOffData[dateStr].hours;
+                            console.log(`  ✓ Applied time off: ${dateStr} = ${timeOffData[dateStr].hours} hours`);
+                        }
+                    }
+                }
+                
+                const availableHours = totalWorkHours - timeOffHours;
+                
+                weeklyHours[week.week_number] = {
+                    totalWorkDays: week.work_days,
+                    standardHours: totalWorkHours,
+                    timeOffHours: timeOffHours,
+                    availableHours: availableHours
+                };
+                
+                console.log(`Week ${week.week_number} summary: ${totalWorkHours} standard - ${timeOffHours} time off = ${availableHours} available hours`);
+            });
+            
+            // Display work hours summary
+            displayWorkHoursSummary(weeklyHours);
+            
+            // Create weekly sections
+            createWeeklySections();
+            
+            // Show the sections
+            document.getElementById('work-hours-summary').classList.remove('hidden');
+            document.getElementById('weekly-breakdowns-section').classList.remove('hidden');
+            
+            // Show action buttons
+            document.getElementById('preview-btn').style.display = 'inline-block';
+        }
+        
+        function displayWorkHoursSummary(weeklyHours) {
+            const container = document.getElementById('work-hours-display');
+            let html = '<div class="work-hours-grid">';
+            
+            Object.keys(weeklyHours).forEach(weekNum => {
+                const week = weeklyHours[weekNum];
+                const weekInfo = monthInfo.weeks.find(w => w.week_number == weekNum);
+                
+                html += `
+                    <div class="work-hour-item">
+                        <div class="week-title">Week ${weekNum}</div>
+                        <div class="week-dates">${weekInfo.start_date} to ${weekInfo.end_date}</div>
+                        <div class="hour-breakdown">
+                            <div>Work Days: ${week.totalWorkDays}</div>
+                            <div>Standard Hours: ${week.standardHours}</div>
+                            ${week.timeOffHours > 0 ? `<div class="time-off-hours">Time Off: -${week.timeOffHours} hours</div>` : ''}
+                            <div class="available-hours">Available: ${week.availableHours} hours</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        function roundToNokoHours(hours) {
+            // Round to nearest 0.5 hours for Noko compatibility
+            return Math.round(hours * 2) / 2;
+        }
+        
+        function previewTimeEntries() {
+            // This will be called before CSV generation to show what will be created
+            const year = document.getElementById('year').value;
+            const month = document.getElementById('month').value;
+            
+            // Collect all data
+            const weeklyData = {};
+            monthInfo.weeks.forEach(week => {
+                const weekData = {};
+                const container = document.getElementById(`week-${week.week_number}-selected-projects`);
+                
+                if (container) {
+                    const projectItems = container.querySelectorAll('.selected-project-item');
+                    projectItems.forEach(item => {
+                        const projectKey = item.getAttribute('data-project');
+                        const percentageInput = item.querySelector('.percentage-input-small');
+                        if (projectKey && percentageInput) {
+                            weekData[projectKey] = parseFloat(percentageInput.value) || 0;
+                        }
+                    });
+                }
+                
+                weeklyData[`week_${week.week_number}`] = weekData;
+            });
+            
+            // Calculate time entries and show preview
+            calculateTimeEntries(year, month, weeklyData).then(entries => {
+                displayPreview(entries);
+                document.getElementById('preview-section').classList.remove('hidden');
+                document.getElementById('generate-btn').style.display = 'inline-block';
+            });
+        }
+        
+        async function calculateTimeEntries(year, month, weeklyData) {
+            // This now exactly mimics the backend calculation logic
+            const entries = [];
+            const timeOffData = {};
+            
+            // Collect time off
+            document.querySelectorAll('.time-off-item').forEach(item => {
+                const date = item.querySelector('.time-off-date').value;
+                const hours = parseFloat(item.querySelector('.time-off-hours').value);
+                const description = item.querySelector('.time-off-desc').value;
+                
+                if (date && hours > 0) {
+                    timeOffData[date] = { hours, description: description || 'Time off' };
+                }
+            });
+            
+            // Track which time-off entries we've added to avoid duplicates
+            const addedTimeOffDates = new Set();
+            
+            // Get the last business day of each week that falls within the target month
+            const weekRegistrationDays = [];
+            
+            // For each week in monthInfo, find the last business day in the target month
+            monthInfo.weeks.forEach((week, weekIndex) => {
+                const weekStart = new Date(week.start_date);
+                const weekEnd = new Date(week.end_date);
+                console.log(`Looking for last business day in Week ${weekIndex + 1}: ${week.start_date} to ${week.end_date}`);
+                
+                // Find the last business day of this week that's in our target month
+                for (let dayOffset = 6; dayOffset >= 0; dayOffset--) { // Start from Saturday, work backwards
+                    const checkDate = new Date(weekStart);
+                    checkDate.setDate(weekStart.getDate() + dayOffset);
+                    // Use local date to avoid timezone shifts
+                    const checkYear = checkDate.getFullYear();
+                    const checkMonth = String(checkDate.getMonth() + 1).padStart(2, '0');
+                    const checkDay = String(checkDate.getDate()).padStart(2, '0');
+                    const checkDateStr = `${checkYear}-${checkMonth}-${checkDay}`;
+                    
+                    const dayOfWeek = checkDate.getDay();
+                    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                    console.log(`  Checking ${checkDateStr}: month=${checkDate.getMonth()} (target=${month-1}), year=${checkDate.getFullYear()} (target=${year}), day=${dayOfWeek} (${dayNames[dayOfWeek]}) (1-5=weekday)`);
+                    
+                    // If this day is in our target month and is a weekday (Mon-Fri)
+                    const monthMatch = checkDate.getMonth() === month - 1;
+                    const yearMatch = checkDate.getFullYear() === parseInt(year);
+                    const weekdayMatch = dayOfWeek >= 1 && dayOfWeek <= 5;
+                    
+                    console.log(`    Month: ${monthMatch} (${checkDate.getMonth()} === ${month - 1})`);
+                    console.log(`    Year: ${yearMatch} (${checkDate.getFullYear()} === ${year}) - types: ${typeof checkDate.getFullYear()} vs ${typeof year}`);
+                    console.log(`    Weekday: ${weekdayMatch} (${dayOfWeek} >= 1 && <= 5)`);
+                    
+                    if (monthMatch && yearMatch && weekdayMatch) {
+                        const actualDayName = dayNames[checkDate.getDay()];
+                        console.log(`  ✓ Found last business day for Week ${weekIndex + 1}: ${checkDateStr} (${actualDayName})`);
+                        weekRegistrationDays.push({
+                            date: checkDate,
+                            weekIndex: weekIndex
+                        });
+                        break; // Found the last business day for this week
+                    }
+                }
+            });
+            
+            console.log('Week registration days:', weekRegistrationDays.map(w => w.date.toISOString().split('T')[0]));
+            
+            // Process each week registration day
+            for (const weekDay of weekRegistrationDays) {
+                const currentDate = weekDay.date;
+                const weekIndex = weekDay.weekIndex;
+                // Use local date to avoid timezone shifts
+                const year = currentDate.getFullYear();
+                const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                const day = String(currentDate.getDate()).padStart(2, '0');
+                const dateStr = `${year}-${month}-${day}`;
+                const actualDayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][currentDate.getDay()];
+                console.log(`Processing week registration day: ${dateStr} (${actualDayName}) for week ${weekIndex + 1}`);
+                
+                // Add time off entry if present on this registration day
+                if (timeOffData[dateStr] && !addedTimeOffDates.has(dateStr)) {
+                    const timeOffEntry = timeOffData[dateStr];
+                    entries.push({
+                        date: dateStr,
+                        project: 'Time-Off (OOO)',
+                        hours: timeOffEntry.hours,
+                        description: timeOffEntry.description,
+                        isTimeOff: true
+                    });
+                    addedTimeOffDates.add(dateStr);
+                    console.log(`Added time off entry for ${dateStr}`);
+                }
+                
+                const weekKey = `week_${weekIndex + 1}`;
+                const weekData = weeklyData[weekKey] || {};
+                console.log(`Week data for ${weekKey}:`, weekData);
+                console.log(`Has project data: ${Object.keys(weekData).length > 0}`);
+                console.log(`Available weeklyData keys:`, Object.keys(weeklyData));
+                
+                if (Object.keys(weekData).length > 0) {
+                    console.log(`Processing projects for ${dateStr} (${weekKey})`);
+                    
+                    // Calculate available work hours for this week (matching backend)
+                    const weekStart = new Date(monthInfo.weeks[weekIndex].start_date);
+                    let weekWorkHours = 0;
+                    
+                    console.log(`Calculating work hours for week starting ${weekStart.toISOString().split('T')[0]}`);
+                    for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
+                        const checkDate = new Date(weekStart);
+                        checkDate.setDate(weekStart.getDate() + dayOffset);
+                        // Use local date to avoid timezone shifts
+                        const checkYear = checkDate.getFullYear();
+                        const checkMonth = String(checkDate.getMonth() + 1).padStart(2, '0');
+                        const checkDay = String(checkDate.getDate()).padStart(2, '0');
+                        const checkDateStr = `${checkYear}-${checkMonth}-${checkDay}`;
+                        
+                        const monthMatch = checkDate.getMonth() === month - 1;
+                        const yearMatch = checkDate.getFullYear() === parseInt(year);
+                        const weekdayMatch = checkDate.getDay() >= 1 && checkDate.getDay() <= 5;
+                        
+                        console.log(`  ${checkDateStr}: month=${monthMatch} year=${yearMatch} weekday=${weekdayMatch} (day=${checkDate.getDay()})`);
+                        
+                        // If it's a weekday in our target month
+                        if (monthMatch && yearMatch && weekdayMatch) {
+                            if (timeOffData[checkDateStr]) {
+                                // Subtract time off hours
+                                const workHours = 8 - timeOffData[checkDateStr].hours;
+                                weekWorkHours += workHours;
+                                console.log(`    Adding ${workHours}h (8h - ${timeOffData[checkDateStr].hours}h time off)`);
+                            } else {
+                                // Full 8-hour day
+                                weekWorkHours += 8;
+                                console.log(`    Adding 8h (full work day)`);
+                            }
+                        }
+                    }
+                    
+                    console.log(`Week work hours calculated: ${weekWorkHours}`);
+                    
+                    // Generate entries using the new guaranteed total matching logic
+                    const projectHours = [];
+                    let totalRoundedHours = 0;
+                    
+                    // First pass: calculate raw and rounded hours for each project
+                    Object.keys(weekData).forEach(projectKey => {
+                        const percentage = weekData[projectKey];
+                        if (percentage > 0) {
+                            const rawHours = (percentage / 100.0) * weekWorkHours;
+                            const roundedHours = roundToNokoHours(rawHours);
+                            console.log(`${projectKey}: ${percentage}% of ${weekWorkHours}h = ${rawHours}h → ${roundedHours}h`);
+                            
+                            projectHours.push({
+                                projectKey,
+                                rawHours,
+                                roundedHours,
+                                percentage
+                            });
+                            totalRoundedHours += roundedHours;
+                        }
+                    });
+                    
+                    // Adjust the largest project to match the weekly total exactly
+                    const hoursDifference = weekWorkHours - totalRoundedHours;
+                    
+                    if (Math.abs(hoursDifference) >= 0.5 && projectHours.length > 0) {
+                        // Find the project with the largest raw hours
+                        const largestProject = projectHours.reduce((max, current) => 
+                            current.rawHours > max.rawHours ? current : max
+                        );
+                        
+                        // Adjust in 0.5-hour increments
+                        const adjustmentIncrements = Math.floor(hoursDifference / 0.5);
+                        const adjustment = adjustmentIncrements * 0.5;
+                        
+                        largestProject.roundedHours += adjustment;
+                        largestProject.wasAdjusted = true;
+                        largestProject.adjustment = adjustment;
+                        
+                        // Ensure we don't go negative
+                        if (largestProject.roundedHours < 0) {
+                            largestProject.roundedHours = 0;
+                        }
+                    }
+                    
+                    // Create entries with final adjusted hours
+                    console.log(`Creating ${projectHours.length} project entries for ${dateStr}`);
+                    projectHours.forEach(projectData => {
+                        if (projectData.roundedHours > 0) {
+                            const entry = {
+                                date: dateStr,
+                                project: projects[projectData.projectKey]?.name || projectData.projectKey,
+                                hours: projectData.roundedHours,
+                                percentage: projectData.percentage,
+                                isRounded: projectData.roundedHours !== projectData.rawHours,
+                                wasAdjusted: projectData.wasAdjusted || false,
+                                adjustment: projectData.adjustment || 0,
+                                weekWorkHours: weekWorkHours // For debugging
+                            };
+                            console.log(`Adding entry:`, entry);
+                            entries.push(entry);
+                        } else {
+                            console.log(`Skipping ${projectData.projectKey} - 0 hours after rounding`);
+                        }
+                    });
+                }
+            }
+            
+            // Add any remaining time-off entries that weren't on registration days
+            console.log(`Checking for remaining time-off entries. Added so far:`, Array.from(addedTimeOffDates));
+            console.log(`All time-off dates:`, Object.keys(timeOffData));
+            
+            Object.keys(timeOffData).forEach(dateStr => {
+                console.log(`Checking ${dateStr}: already added = ${addedTimeOffDates.has(dateStr)}`);
+                if (!addedTimeOffDates.has(dateStr)) {
+                    const timeOffEntry = timeOffData[dateStr];
+                    entries.push({
+                        date: dateStr,
+                        project: 'Time-Off (OOO)',
+                        hours: timeOffEntry.hours,
+                        description: timeOffEntry.description,
+                        isTimeOff: true
+                    });
+                    console.log(`Added remaining time off entry for ${dateStr}`);
+                } else {
+                    console.log(`Skipping ${dateStr} - already added`);
+                }
+            });
+            
+            return entries;
+        }
+        
+        function displayPreview(entries) {
+            const container = document.getElementById('preview-display');
+            let html = '<div class="preview-table"><table><thead><tr><th>Date</th><th>Project</th><th>Hours</th><th>Notes</th></tr></thead><tbody>';
+            
+            entries.forEach(entry => {
+                let rowClass = '';
+                let notes = '';
+                
+                if (entry.isTimeOff) {
+                    rowClass = 'time-off-row';
+                    notes = entry.description || 'Time Off';
+                } else {
+                    if (entry.wasAdjusted) {
+                        rowClass = 'adjusted-row';
+                        notes = `🎯 Adjusted ${entry.adjustment > 0 ? '+' : ''}${entry.adjustment}h to match weekly total`;
+                    } else if (entry.isRounded) {
+                        rowClass = 'rounded-row';
+                        notes = `⚠️ Rounded to .0/.5 hours`;
+                    }
+                }
+                
+                html += `
+                    <tr class="${rowClass}">
+                        <td>${entry.date}</td>
+                        <td>${entry.project}</td>
+                        <td>${entry.hours}</td>
+                        <td>${notes}</td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        }
+        
+        function addTimeOffEntry() {
+            const container = document.getElementById('time-off-entries');
+            const div = document.createElement('div');
+            div.className = 'time-off-item';
+            div.innerHTML = `
+                <input type="date" placeholder="Date" class="time-off-date">
+                <select class="time-off-hours">
+                    <option value="">Hours...</option>
+                    <option value="0.5">0.5 hours</option>
+                    <option value="1">1.0 hours</option>
+                    <option value="1.5">1.5 hours</option>
+                    <option value="2">2.0 hours</option>
+                    <option value="2.5">2.5 hours</option>
+                    <option value="3">3.0 hours</option>
+                    <option value="3.5">3.5 hours</option>
+                    <option value="4">4.0 hours</option>
+                    <option value="4.5">4.5 hours</option>
+                    <option value="5">5.0 hours</option>
+                    <option value="5.5">5.5 hours</option>
+                    <option value="6">6.0 hours</option>
+                    <option value="6.5">6.5 hours</option>
+                    <option value="7">7.0 hours</option>
+                    <option value="7.5">7.5 hours</option>
+                    <option value="8">8.0 hours (Full Day)</option>
+                </select>
+                <input type="text" placeholder="Description (optional)" class="time-off-desc">
+                <button class="btn btn-danger" onclick="removeTimeOffEntry(this)">Remove</button>
+            `;
+            container.appendChild(div);
+        }
+        
+        function removeTimeOffEntry(button) {
+            button.parentElement.remove();
+        }
+        
+        function copyFromPreviousWeek(weekNumber) {
+            const previousWeekNumber = weekNumber - 1;
+            const previousContainer = document.getElementById(`week-${previousWeekNumber}-selected-projects`);
+            const currentContainer = document.getElementById(`week-${weekNumber}-selected-projects`);
+            
+            if (!previousContainer || !currentContainer) {
+                showAlert('Unable to find previous week data', 'error');
+                return;
+            }
+            
+            // Get all project items from previous week
+            const previousProjects = previousContainer.querySelectorAll('.selected-project-item');
+            
+            if (previousProjects.length === 0) {
+                showAlert(`Week ${previousWeekNumber} has no projects to copy`, 'warning');
+                return;
+            }
+            
+            // Clear current week first
+            currentContainer.innerHTML = '';
+            
+            // Copy each project from previous week
+            previousProjects.forEach(projectItem => {
+                const projectKey = projectItem.getAttribute('data-project');
+                const percentage = parseFloat(projectItem.querySelector('.percentage-input-small').value);
+                const project = projects[projectKey];
+                
+                if (project && percentage > 0) {
+                    // Create new project item for current week
+                    const newProjectDiv = document.createElement('div');
+                    newProjectDiv.className = 'selected-project-item';
+                    newProjectDiv.setAttribute('data-project', projectKey);
+                    newProjectDiv.innerHTML = `
+                        <div class="project-info">
+                            <span class="project-name">${project.name}</span>
+                            <span class="project-group">(${project.group_client})</span>
+                        </div>
+                        <div class="project-percentage">
+                            <input type="number" 
+                                   class="percentage-input-small" 
+                                   value="${percentage}"
+                                   min="0" 
+                                   max="100" 
+                                   step="0.5"
+                                   onchange="updateWeekTotal(${weekNumber})">
+                            <span class="percentage-display">%</span>
+                        </div>
+                        <button class="btn btn-danger btn-small" onclick="removeProjectFromWeek(${weekNumber}, '${projectKey}')">×</button>
+                    `;
+                    
+                    currentContainer.appendChild(newProjectDiv);
+                }
+            });
+            
+            // Update the total for current week
+            updateWeekTotal(weekNumber);
+            
+            // Show success message
+            const copiedCount = previousProjects.length;
+            showAlert(`Copied ${copiedCount} project${copiedCount !== 1 ? 's' : ''} from Week ${previousWeekNumber} to Week ${weekNumber}`, 'success');
+        }
+        
+        async function generateCSV() {
+            const year = document.getElementById('year').value;
+            const month = document.getElementById('month').value;
+            
+            if (!year || !month || !monthInfo.weeks) {
+                showAlert('Please load a month first', 'error');
+                return;
+            }
+            
+            // Collect weekly data
+            const weeklyData = {};
+            monthInfo.weeks.forEach(week => {
+                const weekData = {};
+                const container = document.getElementById(`week-${week.week_number}-selected-projects`);
+                
+                if (container) {
+                    const projectItems = container.querySelectorAll('.selected-project-item');
+                    projectItems.forEach(item => {
+                        const projectKey = item.getAttribute('data-project');
+                        const percentageInput = item.querySelector('.percentage-input-small');
+                        if (projectKey && percentageInput) {
+                            weekData[projectKey] = parseFloat(percentageInput.value) || 0;
+                        }
+                    });
+                }
+                
+                weeklyData[`week_${week.week_number}`] = weekData;
+            });
+            
+            // Collect time off data
+            const timeOffData = {};
+            document.querySelectorAll('.time-off-item').forEach(item => {
+                const date = item.querySelector('.time-off-date').value;
+                const hoursSelect = item.querySelector('.time-off-hours');
+                const hours = parseFloat(hoursSelect.value);
+                const description = item.querySelector('.time-off-desc').value;
+                
+                if (date && hours > 0) {
+                    timeOffData[date] = {
+                        hours: hours,
+                        description: description || 'Time off'
+                    };
+                }
+            });
+            
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        year: parseInt(year),
+                        month: parseInt(month),
+                        weekly_data: weeklyData,
+                        time_off_data: timeOffData
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Download the CSV
+                    downloadCSV(result.csv_content, result.filename);
+                    showAlert('CSV file generated successfully!', 'success');
+                } else {
+                    showAlert('Error generating CSV: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showAlert('Error generating CSV: ' + error.message, 'error');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+        
+        function downloadCSV(content, filename) {
+            const blob = new Blob([content], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+        
+        function showAlert(message, type) {
+            const alertsContainer = document.getElementById('alerts');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            
+            alertsContainer.innerHTML = '';
+            alertsContainer.appendChild(alert);
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+        
+        async function saveProfile() {
+            const profileName = document.getElementById('profile-name').value.trim();
+            const year = document.getElementById('year').value;
+            const month = document.getElementById('month').value;
+            
+            if (!profileName) {
+                showAlert('Please enter a profile name', 'error');
+                return;
+            }
+            
+            if (!year || !month || !monthInfo.weeks) {
+                showAlert('Please load a month first', 'error');
+                return;
+            }
+            
+            // Collect current data
+            const weeklyData = {};
+            monthInfo.weeks.forEach(week => {
+                const weekData = {};
+                const container = document.getElementById(`week-${week.week_number}-selected-projects`);
+                
+                if (container) {
+                    const projectItems = container.querySelectorAll('.selected-project-item');
+                    projectItems.forEach(item => {
+                        const projectKey = item.getAttribute('data-project');
+                        const percentageInput = item.querySelector('.percentage-input-small');
+                        if (projectKey && percentageInput) {
+                            weekData[projectKey] = parseFloat(percentageInput.value) || 0;
+                        }
+                    });
+                }
+                
+                weeklyData[`week_${week.week_number}`] = weekData;
+            });
+            
+            const timeOffData = {};
+            document.querySelectorAll('.time-off-item').forEach(item => {
+                const date = item.querySelector('.time-off-date').value;
+                const hoursSelect = item.querySelector('.time-off-hours');
+                const hours = parseFloat(hoursSelect.value);
+                const description = item.querySelector('.time-off-desc').value;
+                
+                if (date && hours > 0) {
+                    timeOffData[date] = {
+                        hours: hours,
+                        description: description || 'Time off'
+                    };
+                }
+            });
+            
+            try {
+                const response = await fetch('/api/save-profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        profile_name: profileName,
+                        year: parseInt(year),
+                        month: parseInt(month),
+                        weekly_data: weeklyData,
+                        time_off_data: timeOffData
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert(result.message, 'success');
+                    document.getElementById('profile-name').value = '';
+                    refreshProfiles();
+                } else {
+                    showAlert('Error saving profile: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showAlert('Error saving profile: ' + error.message, 'error');
+            }
+        }
+        
+        async function loadProfile() {
+            const filename = document.getElementById('profile-selector').value;
+            
+            if (!filename) {
+                showAlert('Please select a profile to load', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/load-profile/${filename}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    const profile = result.profile;
+                    
+                    // Set month/year
+                    document.getElementById('year').value = profile.year;
+                    document.getElementById('month').value = profile.month;
+                    
+                    // Load month info
+                    await loadMonth();
+                    
+                    // Wait a bit for month to load
+                    setTimeout(() => {
+                        // Load time off data
+                        const timeOffContainer = document.getElementById('time-off-entries');
+                        timeOffContainer.innerHTML = '';
+                        
+                        Object.keys(profile.time_off_data || {}).forEach(date => {
+                            const timeOffInfo = profile.time_off_data[date];
+                            const div = document.createElement('div');
+                            div.className = 'time-off-item';
+                            div.innerHTML = `
+                                <input type="date" value="${date}" class="time-off-date">
+                                <select class="time-off-hours">
+                                    <option value="">Hours...</option>
+                                    <option value="0.5" ${timeOffInfo.hours === 0.5 ? 'selected' : ''}>0.5 hours</option>
+                                    <option value="1" ${timeOffInfo.hours === 1 ? 'selected' : ''}>1.0 hours</option>
+                                    <option value="1.5" ${timeOffInfo.hours === 1.5 ? 'selected' : ''}>1.5 hours</option>
+                                    <option value="2" ${timeOffInfo.hours === 2 ? 'selected' : ''}>2.0 hours</option>
+                                    <option value="2.5" ${timeOffInfo.hours === 2.5 ? 'selected' : ''}>2.5 hours</option>
+                                    <option value="3" ${timeOffInfo.hours === 3 ? 'selected' : ''}>3.0 hours</option>
+                                    <option value="3.5" ${timeOffInfo.hours === 3.5 ? 'selected' : ''}>3.5 hours</option>
+                                    <option value="4" ${timeOffInfo.hours === 4 ? 'selected' : ''}>4.0 hours</option>
+                                    <option value="4.5" ${timeOffInfo.hours === 4.5 ? 'selected' : ''}>4.5 hours</option>
+                                    <option value="5" ${timeOffInfo.hours === 5 ? 'selected' : ''}>5.0 hours</option>
+                                    <option value="5.5" ${timeOffInfo.hours === 5.5 ? 'selected' : ''}>5.5 hours</option>
+                                    <option value="6" ${timeOffInfo.hours === 6 ? 'selected' : ''}>6.0 hours</option>
+                                    <option value="6.5" ${timeOffInfo.hours === 6.5 ? 'selected' : ''}>6.5 hours</option>
+                                    <option value="7" ${timeOffInfo.hours === 7 ? 'selected' : ''}>7.0 hours</option>
+                                    <option value="7.5" ${timeOffInfo.hours === 7.5 ? 'selected' : ''}>7.5 hours</option>
+                                    <option value="8" ${timeOffInfo.hours === 8 ? 'selected' : ''}>8.0 hours (Full Day)</option>
+                                </select>
+                                <input type="text" value="${timeOffInfo.description || ''}" class="time-off-desc">
+                                <button class="btn btn-danger" onclick="removeTimeOffEntry(this)">Remove</button>
+                            `;
+                            timeOffContainer.appendChild(div);
+                        });
+                        
+                        // Calculate work hours to show weekly sections
+                        calculateWorkHours();
+                        
+                        // Load weekly project data
+                        setTimeout(() => {
+                            Object.keys(profile.weekly_data || {}).forEach(weekKey => {
+                                const weekNumber = parseInt(weekKey.replace('week_', ''));
+                                const weekData = profile.weekly_data[weekKey];
+                                const container = document.getElementById(`week-${weekNumber}-selected-projects`);
+                                
+                                if (container) {
+                                    container.innerHTML = '';
+                                    
+                                    Object.keys(weekData).forEach(projectKey => {
+                                        const percentage = weekData[projectKey];
+                                        const project = projects[projectKey];
+                                        
+                                        if (project && percentage > 0) {
+                                            const newProjectDiv = document.createElement('div');
+                                            newProjectDiv.className = 'selected-project-item';
+                                            newProjectDiv.setAttribute('data-project', projectKey);
+                                            newProjectDiv.innerHTML = `
+                                                <div class="project-info">
+                                                    <span class="project-name">${project.name}</span>
+                                                    <span class="project-group">(${project.group_client})</span>
+                                                </div>
+                                                <div class="project-percentage">
+                                                    <input type="number" 
+                                                           class="percentage-input-small" 
+                                                           value="${percentage}"
+                                                           min="0" 
+                                                           max="100" 
+                                                           step="0.5"
+                                                           onchange="updateWeekTotal(${weekNumber})">
+                                                    <span class="percentage-display">%</span>
+                                                </div>
+                                                <button class="btn btn-danger btn-small" onclick="removeProjectFromWeek(${weekNumber}, '${projectKey}')">×</button>
+                                            `;
+                                            
+                                            container.appendChild(newProjectDiv);
+                                        }
+                                    });
+                                    
+                                    updateWeekTotal(weekNumber);
+                                }
+                            });
+                            
+                            showAlert(`Profile "${profile.profile_name}" loaded successfully!`, 'success');
+                        }, 500);
+                    }, 1000);
+                } else {
+                    showAlert('Error loading profile: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showAlert('Error loading profile: ' + error.message, 'error');
+            }
+        }
+        
+        async function refreshProfiles() {
+            try {
+                const response = await fetch('/api/list-profiles');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const selector = document.getElementById('profile-selector');
+                    selector.innerHTML = '<option value="">Select a saved profile...</option>';
+                    
+                    result.profiles.forEach(profile => {
+                        const option = document.createElement('option');
+                        option.value = profile.filename;
+                        option.textContent = `${profile.profile_name} (${profile.month_name} ${profile.year})`;
+                        selector.appendChild(option);
+                    });
+                } else {
+                    console.error('Error loading profiles:', result.error);
+                }
+            } catch (error) {
+                console.error('Error loading profiles:', error);
+            }
+        }
+        
+        async function importFromJSON() {
+            const jsonText = document.getElementById('json-import').value.trim();
+            
+            if (!jsonText) {
+                showAlert('Please paste JSON data first', 'error');
+                return;
+            }
+            
+            try {
+                const data = JSON.parse(jsonText);
+                
+                // Validate required fields
+                if (!data.year || !data.month || !data.weekly_data) {
+                    showAlert('Invalid JSON: Missing required fields (year, month, weekly_data)', 'error');
+                    return;
+                }
+                
+                // Create a profile object
+                const profile = {
+                    profile_name: `Imported ${data.year}-${data.month}`,
+                    year: data.year,
+                    month: data.month,
+                    weekly_data: data.weekly_data,
+                    time_off_data: data.time_off_data || {}
+                };
+                
+                // Set month/year
+                document.getElementById('year').value = profile.year;
+                document.getElementById('month').value = profile.month;
+                
+                // Load month info
+                await loadMonth();
+                
+                // Wait a bit for month to load
+                setTimeout(() => {
+                    // Load time off data
+                    const timeOffContainer = document.getElementById('time-off-entries');
+                    timeOffContainer.innerHTML = '';
+                    
+                    Object.keys(profile.time_off_data || {}).forEach(date => {
+                        const timeOffInfo = profile.time_off_data[date];
+                        const div = document.createElement('div');
+                        div.className = 'time-off-item';
+                        div.innerHTML = `
+                            <input type="date" value="${date}" class="time-off-date">
+                            <select class="time-off-hours">
+                                <option value="">Hours...</option>
+                                <option value="0.5" ${timeOffInfo.hours === 0.5 ? 'selected' : ''}>0.5 hours</option>
+                                <option value="1" ${timeOffInfo.hours === 1 ? 'selected' : ''}>1.0 hours</option>
+                                <option value="1.5" ${timeOffInfo.hours === 1.5 ? 'selected' : ''}>1.5 hours</option>
+                                <option value="2" ${timeOffInfo.hours === 2 ? 'selected' : ''}>2.0 hours</option>
+                                <option value="2.5" ${timeOffInfo.hours === 2.5 ? 'selected' : ''}>2.5 hours</option>
+                                <option value="3" ${timeOffInfo.hours === 3 ? 'selected' : ''}>3.0 hours</option>
+                                <option value="3.5" ${timeOffInfo.hours === 3.5 ? 'selected' : ''}>3.5 hours</option>
+                                <option value="4" ${timeOffInfo.hours === 4 ? 'selected' : ''}>4.0 hours</option>
+                                <option value="4.5" ${timeOffInfo.hours === 4.5 ? 'selected' : ''}>4.5 hours</option>
+                                <option value="5" ${timeOffInfo.hours === 5 ? 'selected' : ''}>5.0 hours</option>
+                                <option value="5.5" ${timeOffInfo.hours === 5.5 ? 'selected' : ''}>5.5 hours</option>
+                                <option value="6" ${timeOffInfo.hours === 6 ? 'selected' : ''}>6.0 hours</option>
+                                <option value="6.5" ${timeOffInfo.hours === 6.5 ? 'selected' : ''}>6.5 hours</option>
+                                <option value="7" ${timeOffInfo.hours === 7 ? 'selected' : ''}>7.0 hours</option>
+                                <option value="7.5" ${timeOffInfo.hours === 7.5 ? 'selected' : ''}>7.5 hours</option>
+                                <option value="8" ${timeOffInfo.hours === 8 ? 'selected' : ''}>8.0 hours (Full Day)</option>
+                            </select>
+                            <input type="text" value="${timeOffInfo.description || ''}" class="time-off-desc">
+                            <button class="btn btn-danger" onclick="removeTimeOffEntry(this)">Remove</button>
+                        `;
+                        timeOffContainer.appendChild(div);
+                    });
+                    
+                    // Calculate work hours to show weekly sections
+                    calculateWorkHours();
+                    
+                    // Load weekly project data
+                    setTimeout(() => {
+                        Object.keys(profile.weekly_data || {}).forEach(weekKey => {
+                            const weekNumber = parseInt(weekKey.replace('week_', ''));
+                            const weekData = profile.weekly_data[weekKey];
+                            const container = document.getElementById(`week-${weekNumber}-selected-projects`);
+                            
+                            if (container) {
+                                container.innerHTML = '';
+                                
+                                Object.keys(weekData).forEach(projectKey => {
+                                    const percentage = weekData[projectKey];
+                                    const project = projects[projectKey];
+                                    
+                                    if (project && percentage > 0) {
+                                        const newProjectDiv = document.createElement('div');
+                                        newProjectDiv.className = 'selected-project-item';
+                                        newProjectDiv.setAttribute('data-project', projectKey);
+                                        newProjectDiv.innerHTML = `
+                                            <div class="project-info">
+                                                <span class="project-name">${project.name}</span>
+                                                <span class="project-group">(${project.group_client})</span>
+                                            </div>
+                                            <div class="project-percentage">
+                                                <input type="number" 
+                                                       class="percentage-input-small" 
+                                                       value="${percentage}"
+                                                       min="0" 
+                                                       max="100" 
+                                                       step="0.5"
+                                                       onchange="updateWeekTotal(${weekNumber})">
+                                                <span class="percentage-display">%</span>
+                                            </div>
+                                            <button class="btn btn-danger btn-small" onclick="removeProjectFromWeek(${weekNumber}, '${projectKey}')">×</button>
+                                        `;
+                                        
+                                        container.appendChild(newProjectDiv);
+                                    }
+                                });
+                                
+                                updateWeekTotal(weekNumber);
+                            }
+                        });
+                        
+                        // Clear the JSON input
+                        document.getElementById('json-import').value = '';
+                        
+                        showAlert('JSON data imported successfully!', 'success');
+                    }, 500);
+                }, 1000);
+                
+            } catch (error) {
+                showAlert('Invalid JSON format: ' + error.message, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

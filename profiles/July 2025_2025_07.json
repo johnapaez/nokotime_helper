@@ -1,0 +1,57 @@
+{
+  "profile_name": "July 2025",
+  "year": 2025,
+  "month": 7,
+  "created_date": "2025-08-05T17:13:06.700795",
+  "weekly_data": {
+    "week_1": {
+      "nhl_tbts": 5,
+      "aibm": 25,
+      "nfl_vof_custom_dashboard": 10,
+      "gcp_migration": 40,
+      "administration": 10,
+      "general_support_it": 10
+    },
+    "week_2": {
+      "nfl_vof_custom_dashboard": 10,
+      "gcp_migration": 35,
+      "aibm": 25,
+      "nhl_tbts": 10,
+      "administration": 10,
+      "general_support_it": 10
+    },
+    "week_3": {
+      "aibm": 25,
+      "nhl_tbts": 10,
+      "decipher_migration": 5,
+      "administration": 10,
+      "general_support_it": 10,
+      "gcp_migration": 40
+    },
+    "week_4": {
+      "administration": 25,
+      "general_support_it": 25,
+      "gcp_migration": 40,
+      "aibm": 10
+    },
+    "week_5": {
+      "nfl_vof_custom_dashboard": 10,
+      "cinesys_c": 15,
+      "espn_bet": 10,
+      "decipher_migration": 5,
+      "gcp_migration": 40,
+      "ai": 10,
+      "general_support_it": 10
+    }
+  },
+  "time_off_data": {
+    "2025-07-04": {
+      "hours": 8,
+      "description": "Time-Off 4th of July"
+    },
+    "2025-07-07": {
+      "hours": 8,
+      "description": "Time-Off 4th of July"
+    }
+  }
+}

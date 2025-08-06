@@ -1,0 +1,289 @@
+{
+  "user_info": {
+    "name": "John Paez",
+    "teams": "Full-Time Employees, Software Engineering",
+    "email": "john.paez@nrgmr.com"
+  },
+  "projects": {
+    "cycle": {
+      "name": "Cycle",
+      "group_client": "CapEx Projects",
+      "description": "#productionsupport",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "aibm": {
+      "name": "AIBM",
+      "group_client": "OpEx Projects",
+      "description": "Bridging the Dad Gap - US3722506384",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "copilot": {
+      "name": "CoPilot",
+      "group_client": "",
+      "description": "#productionsupport",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "nhl_tbts": {
+      "name": "NHL TBTS",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "productionsupport",
+      "billable": "yes"
+    },
+    "linear_iq_liq": {
+      "name": "Linear IQ (LIQ)",
+      "group_client": "CapEx Projects",
+      "description": "#development",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "nfl_vof_custom_dashboard": {
+      "name": "NFL VoF (custom dashboard)",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "productionsupport",
+      "billable": "yes"
+    },
+    "espn_bet": {
+      "name": "ESPN Bet",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "productionsupport",
+      "billable": "yes"
+    },
+    "administration": {
+      "name": "Administration",
+      "group_client": "OpEx Projects",
+      "description": "Admin Meetings & Tasks",
+      "tags": "productionsupport",
+      "billable": "yes"
+    },
+    "franchise_iq_fiq": {
+      "name": "Franchise IQ (FIQ)",
+      "group_client": "CapEx Projects",
+      "description": "Formerly Franchise Futures (FF)",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "queryous_george": {
+      "name": "Queryous George",
+      "group_client": "CapEx Projects",
+      "description": "#productionsupport",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "nbcucopilot_custom_dashboard": {
+      "name": "NBCU/CoPilot (custom dashboard)",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "the_network_troy_custom_dashboard": {
+      "name": "The Network - Troy (custom dashboard)",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "productionsupport",
+      "billable": "yes"
+    },
+    "syndicate_tracking_product_stp": {
+      "name": "Syndicate Tracking Product (STP)",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "productionsupport",
+      "billable": "yes"
+    },
+    "personas": {
+      "name": "Personas",
+      "group_client": "CapEx Projects",
+      "description": "#productionsupport",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "originals_iq_oiq": {
+      "name": "Originals IQ (OIQ)",
+      "group_client": "CapEx Projects",
+      "description": "#development",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "metadata_management_system": {
+      "name": "Metadata Management System",
+      "group_client": "CapEx Projects",
+      "description": "#development",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "cinesys_c": {
+      "name": "Cinesys+ (C+)",
+      "group_client": "CapEx Projects",
+      "description": "#productionsupport",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "forecast_modeling": {
+      "name": "Forecast Modeling",
+      "group_client": "",
+      "description": "#productionsupport",
+      "tags": "development",
+      "billable": "no"
+    },
+    "decipher_migration": {
+      "name": "Decipher Migration",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "nrg_website": {
+      "name": "NRG Website",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "productionsupport",
+      "billable": "yes"
+    },
+    "synchronous_viewing_sv": {
+      "name": "Synchronous Viewing (SV)",
+      "group_client": "CapEx Projects",
+      "description": "#productionsupport",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "google_safety_tracker_gst": {
+      "name": "Google Safety Tracker (GST)",
+      "group_client": "CapEx Projects",
+      "description": "#development",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "ai": {
+      "name": "AI",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "mindwave_mw": {
+      "name": "Mindwave (Mw)",
+      "group_client": "CapEx Projects",
+      "description": "#productionsupport",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "audience_iq_aiq": {
+      "name": "Audience IQ (AIQ)",
+      "group_client": "",
+      "description": "#development",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "gcp_migration": {
+      "name": "GCP Migration",
+      "group_client": "CapEx Projects",
+      "description": "#productionsupport",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "security_operations_secops": {
+      "name": "Security Operations (SecOps)",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "productionsupport",
+      "billable": "yes"
+    },
+    "general_support_it": {
+      "name": "General Support (IT)",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "productionsupport",
+      "billable": "yes"
+    },
+    "time_off_ooo": {
+      "name": "Time-Off (OOO)",
+      "group_client": "",
+      "description": "Time off",
+      "tags": "other",
+      "billable": "yes"
+    },
+    "rockstar_custom_dashboard": {
+      "name": "Rockstar (custom dashboard)",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "productionsupport",
+      "billable": "yes"
+    },
+    "verizon_value_tracker_custom_dashboard": {
+      "name": "Verizon Value Tracker (custom dashboard)",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "cinesys_legacy": {
+      "name": "Cinesys (legacy)",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "productionsupport",
+      "billable": "yes"
+    },
+    "horizon_hzn": {
+      "name": "Horizon (Hzn)",
+      "group_client": "CapEx Projects",
+      "description": "#productionsupport",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "copilot_cp": {
+      "name": "CoPilot (CP)",
+      "group_client": "CapEx Projects",
+      "description": "US37200291",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "pixel_united_custom_dashboard": {
+      "name": "Pixel United (custom dashboard)",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "productionsupport",
+      "billable": "yes"
+    },
+    "extranet_xnet": {
+      "name": "Extranet (XNet)",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "productionsupport",
+      "billable": "yes"
+    },
+    "copilot_disney_paid_work": {
+      "name": "CoPilot - Disney Paid Work",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "development",
+      "billable": "yes"
+    },
+    "emea_custom_dashboard": {
+      "name": "EMEA (custom dashboard)",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "productionsupport",
+      "billable": "yes"
+    },
+    "paramount_pop_poll_custom_dashboard": {
+      "name": "Paramount Pop Poll (custom dashboard)",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "productionsupport",
+      "billable": "yes"
+    },
+    "the_network_positioning_study_custom_dashboard": {
+      "name": "The Network - Positioning Study (custom dashboard)",
+      "group_client": "OpEx Projects",
+      "description": "#productionsupport",
+      "tags": "productionsupport",
+      "billable": "yes"
+    }
+  }
+}
