@@ -1,0 +1,70 @@
+{
+  "profile_name": "September 2025",
+  "year": 2025,
+  "month": 8,
+  "created_date": "2025-09-03T22:10:25.985860",
+  "weekly_data": {
+    "week_1": {
+      "gcp_migration": 40,
+      "cinesys_c": 20,
+      "decipher_migration": 20,
+      "administration": 10,
+      "general_support_it": 10
+    },
+    "week_2": {
+      "gcp_migration": 30,
+      "administration": 20,
+      "general_support_it": 10,
+      "franchise_iq_fiq": 5,
+      "aibm": 10,
+      "nhl_tbts": 10,
+      "espn_bet": 10,
+      "nfl_vof_custom_dashboard": 5
+    },
+    "week_3": {
+      "gcp_migration": 30,
+      "administration": 20,
+      "franchise_iq_fiq": 5,
+      "aibm": 25,
+      "nhl_tbts": 5,
+      "espn_bet": 5,
+      "nfl_vof_custom_dashboard": 5,
+      "cinesys_c": 5
+    },
+    "week_4": {
+      "gcp_migration": 35,
+      "administration": 25,
+      "franchise_iq_fiq": 5,
+      "aibm": 20,
+      "nhl_tbts": 5,
+      "nfl_vof_custom_dashboard": 5,
+      "cinesys_c": 5
+    },
+    "week_5": {
+      "gcp_migration": 40,
+      "administration": 20,
+      "aibm": 20,
+      "nfl_vof_custom_dashboard": 5,
+      "cinesys_c": 10,
+      "espn_bet": 5
+    }
+  },
+  "time_off_data": {
+    "2025-08-06": {
+      "hours": 8,
+      "description": "OOO - PTO"
+    },
+    "2025-08-07": {
+      "hours": 8,
+      "description": "OOO - PTO"
+    },
+    "2025-08-08": {
+      "hours": 8,
+      "description": "OOO - PTO"
+    },
+    "2025-08-11": {
+      "hours": 8,
+      "description": "OOO - Sick"
+    }
+  }
+}

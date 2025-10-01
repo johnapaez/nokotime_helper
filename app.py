@@ -287,6 +287,38 @@ def calculate_time_entries(year, month, weekly_data, time_off_data, projects_con
             }
             entries.append(entry)
     
+    # Add any remaining time-off entries that weren't on week registration days
+    # (This matches the frontend preview logic)
+    added_time_off_dates = set()
+    for entry in entries:
+        if entry.get('Project') == projects['time_off_ooo']['name']:
+            added_time_off_dates.add(entry['Date'])
+    
+    for date_str, time_off_info in time_off_data.items():
+        if date_str not in added_time_off_dates:
+            project_info = projects['time_off_ooo']
+            
+            entry = {
+                'Date': date_str,
+                'Person': user_info['name'],
+                'Teams': user_info['teams'],
+                'Email': user_info['email'],
+                'Group/Client': project_info['group_client'],
+                'Project': project_info['name'],
+                'Minutes': int(time_off_info['hours'] * 60),
+                'Hours': time_off_info['hours'],
+                'Tags': project_info['tags'],
+                'Description': time_off_info.get('description', project_info['description']),
+                'Billable': project_info['billable'],
+                'Invoiced': 'no',
+                'Invoice Reference': '',
+                'Paid': 'no', 
+                'Approved': 'no',
+                'Approved By': ''
+            }
+            entries.append(entry)
+            print(f"Added remaining time off entry for {date_str}")
+    
     return entries
 
 @app.route('/')
