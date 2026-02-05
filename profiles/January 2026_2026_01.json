@@ -1,0 +1,45 @@
+{
+  "profile_name": "January 2026",
+  "year": 2026,
+  "month": 1,
+  "created_date": "2026-02-04T16:59:14.672661",
+  "weekly_data": {
+    "week_1": {
+      "cinesys_legacy": 80,
+      "administration": 20
+    },
+    "week_2": {
+      "cinesys_legacy": 70,
+      "administration": 20,
+      "engineering_ops": 10
+    },
+    "week_3": {
+      "cinesys_legacy": 70,
+      "administration": 30
+    },
+    "week_4": {
+      "cinesys_legacy": 70,
+      "administration": 25,
+      "engineering_ops": 5
+    },
+    "week_5": {
+      "cinesys_legacy": 70,
+      "administration": 25,
+      "engineering_ops": 5
+    }
+  },
+  "time_off_data": {
+    "2026-01-01": {
+      "hours": 8,
+      "description": "New Year's Day"
+    },
+    "2026-01-02": {
+      "hours": 8,
+      "description": "New Year's Day"
+    },
+    "2026-01-19": {
+      "hours": 8,
+      "description": "Martin Luther King Jr Day"
+    }
+  }
+}

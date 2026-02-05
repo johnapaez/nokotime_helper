@@ -16,13 +16,65 @@ app = Flask(__name__)
 
 # Load project configuration
 def load_projects():
-    """Load project configuration from JSON file"""
+    """Load project configuration from CSV file"""
+    try:
+        # First try to load from CSV
+        projects_dict = load_projects_from_csv()
+        if projects_dict:
+            return projects_dict
+    except Exception as e:
+        print(f"Error loading from CSV: {e}")
+    
+    # Fall back to JSON if CSV fails
     try:
         with open('projects.json', 'r') as f:
             return json.load(f)
     except FileNotFoundError:
         # Return default configuration if file doesn't exist
         return get_default_projects()
+
+def load_projects_from_csv():
+    """Load projects from noko_projects.csv"""
+    import csv
+    
+    user_info = {
+        "name": "John Paez",
+        "teams": "Full-Time Employees, Software Engineering",
+        "email": "john.paez@nrgmr.com"
+    }
+    
+    projects = {}
+    
+    try:
+        with open('noko_projects.csv', 'r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                project_name = row['Project Name']
+                group_client = row['Project Group/Client Name']
+                billable = row['Billable']
+                notes = row.get('Notes', '').strip()
+                
+                # Create a key from the project name (lowercase, replace spaces with underscores)
+                project_key = project_name.lower().replace(' ', '_').replace('(', '').replace(')', '').replace('/', '_').replace('+', 'plus').replace('-', '_')
+                
+                # Clean up project key
+                project_key = ''.join(c if c.isalnum() or c == '_' else '_' for c in project_key)
+                project_key = '_'.join(filter(None, project_key.split('_')))  # Remove consecutive underscores
+                
+                projects[project_key] = {
+                    "name": project_name,
+                    "group_client": group_client if group_client else "",
+                    "description": notes if notes else "",
+                    "tags": "",  # Will be set by user in UI
+                    "billable": billable
+                }
+        
+        return {
+            "user_info": user_info,
+            "projects": projects
+        }
+    except FileNotFoundError:
+        return None
 
 def get_default_projects():
     """Default project configuration based on CSV analysis"""
@@ -43,8 +95,8 @@ def get_default_projects():
             "cinesys_plus": {
                 "name": "Cinesys+ (C+)",
                 "group_client": "CapEx Projects", 
-                "description": "#development",
-                "tags": "development",
+                "description": "",
+                "tags": "",
                 "billable": "yes"
             },
             "gcp_migration": {
@@ -57,22 +109,22 @@ def get_default_projects():
             "general_support": {
                 "name": "General Support (IT)",
                 "group_client": "OpEx Projects",
-                "description": "#productionsupport",
-                "tags": "productionsupport", 
+                "description": "",
+                "tags": "",
                 "billable": "yes"
             },
             "google_safety_tracker": {
                 "name": "Google Safety Tracker (GST)",
                 "group_client": "CapEx Projects",
-                "description": "#development",
-                "tags": "development",
+                "description": "",
+                "tags": "",
                 "billable": "yes"
             },
             "linear_iq": {
                 "name": "Linear IQ (LIQ)", 
                 "group_client": "CapEx Projects",
-                "description": "#development",
-                "tags": "development",
+                "description": "",
+                "tags": "",
                 "billable": "yes"
             },
             "mindwave": {
@@ -85,21 +137,21 @@ def get_default_projects():
             "nrg_website": {
                 "name": "NRG Website",
                 "group_client": "OpEx Projects",
-                "description": "#productionsupport", 
-                "tags": "productionsupport",
+                "description": "",
+                "tags": "",
                 "billable": "yes"
             },
             "syndicate_tracking": {
                 "name": "Syndicate Tracking Product (STP)",
                 "group_client": "OpEx Projects", 
-                "description": "#development API discussion",
-                "tags": "development",
+                "description": "",
+                "tags": "",
                 "billable": "yes"
             },
             "time_off": {
                 "name": "Time-Off (OOO)",
                 "group_client": "",
-                "description": "Sick Day and/or Memorial Day",
+                "description": "",
                 "tags": "other", 
                 "billable": "yes"
             }
@@ -120,22 +172,33 @@ def get_month_weeks(year, month):
     days_since_monday = first_day.weekday()
     first_monday = first_day - timedelta(days=days_since_monday)
     
-    # Get all Monday dates for the month
+    # Get last day of month
+    if month == 12:
+        last_day = datetime(year, 12, 31)
+    else:
+        last_day = datetime(year, month + 1, 1) - timedelta(days=1)
+    
+    # Get all Monday dates for weeks that contain days from this month
     weeks = []
     current_monday = first_monday
     
-    while current_monday.month <= month and current_monday.year == year:
-        weeks.append(current_monday)
+    # Continue adding weeks while the week's Sunday (6 days after Monday) 
+    # is before or equal to the last day of the month
+    while current_monday <= last_day:
+        # Add this week if it contains at least one day from the target month
+        week_end = current_monday + timedelta(days=6)
+        # Check if this week overlaps with the target month
+        if current_monday <= last_day and week_end >= first_day:
+            weeks.append(current_monday)
         current_monday += timedelta(days=7)
-    
-    # Add one more week if it contains days from our target month
-    if current_monday.month == month and current_monday.year == year:
-        weeks.append(current_monday)
     
     return weeks
 
-def calculate_time_entries(year, month, weekly_data, time_off_data, projects_config):
+def calculate_time_entries(year, month, weekly_data, time_off_data, projects_config, project_metadata=None):
     """Calculate time entries for the entire month"""
+    if project_metadata is None:
+        project_metadata = {}
+    
     entries = []
     user_info = projects_config['user_info']
     projects = projects_config['projects']
@@ -176,8 +239,8 @@ def calculate_time_entries(year, month, weekly_data, time_off_data, projects_con
                 'Project': project_info['name'],
                 'Minutes': int(time_off_info['hours'] * 60),
                 'Hours': time_off_info['hours'],
-                'Tags': project_info['tags'],
-                'Description': time_off_info.get('description', project_info['description']),
+                'Tags': 'other',  # Time off uses 'other' tag
+                'Description': time_off_info.get('description', project_info.get('description', '')),
                 'Billable': project_info['billable'],
                 'Invoiced': 'no',
                 'Invoice Reference': '',
@@ -267,6 +330,20 @@ def calculate_time_entries(year, month, weekly_data, time_off_data, projects_con
             project_info = projects[project_key]
             minutes = int(hours * 60)
             
+            # Get custom tags and description from metadata if provided
+            week_key = f"week_{week_index + 1}"
+            metadata_key = f"{week_key}_{project_key}"
+            custom_tags = ""
+            custom_description = ""
+            
+            if metadata_key in project_metadata:
+                custom_tags = project_metadata[metadata_key].get('tags', '')
+                custom_description = project_metadata[metadata_key].get('description', '')
+            
+            # Remove leading # from tags if present
+            if custom_tags and custom_tags.startswith('#'):
+                custom_tags = custom_tags[1:]
+            
             entry = {
                 'Date': date_str,
                 'Person': user_info['name'], 
@@ -276,8 +353,8 @@ def calculate_time_entries(year, month, weekly_data, time_off_data, projects_con
                 'Project': project_info['name'],
                 'Minutes': minutes,
                 'Hours': hours,
-                'Tags': project_info['tags'],
-                'Description': project_info['description'],
+                'Tags': custom_tags if custom_tags else project_info.get('tags', ''),
+                'Description': custom_description if custom_description else project_info.get('description', ''),
                 'Billable': project_info['billable'],
                 'Invoiced': 'no',
                 'Invoice Reference': '',
@@ -307,8 +384,8 @@ def calculate_time_entries(year, month, weekly_data, time_off_data, projects_con
                 'Project': project_info['name'],
                 'Minutes': int(time_off_info['hours'] * 60),
                 'Hours': time_off_info['hours'],
-                'Tags': project_info['tags'],
-                'Description': time_off_info.get('description', project_info['description']),
+                'Tags': 'other',  # Time off uses 'other' tag
+                'Description': time_off_info.get('description', project_info.get('description', '')),
                 'Billable': project_info['billable'],
                 'Invoiced': 'no',
                 'Invoice Reference': '',
@@ -336,15 +413,17 @@ def generate_csv():
         month = int(data['month'])
         weekly_data = data['weekly_data']
         time_off_data = data.get('time_off_data', {})
+        project_metadata = data.get('project_metadata', {})  # New: tags and descriptions
         
         print(f"Generating CSV for {year}-{month}")
         print(f"Weekly data: {weekly_data}")
         print(f"Time off data: {time_off_data}")
+        print(f"Project metadata: {project_metadata}")
         
         projects_config = load_projects()
         
         # Calculate all time entries
-        entries = calculate_time_entries(year, month, weekly_data, time_off_data, projects_config)
+        entries = calculate_time_entries(year, month, weekly_data, time_off_data, projects_config, project_metadata)
         
         # Generate CSV
         output = io.StringIO()
@@ -477,6 +556,38 @@ def list_profiles():
         print(f"Error listing profiles: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
+@app.route('/api/us-holidays-2026')
+def get_us_holidays_2026():
+    """Get US Recharge Days for 2026"""
+    holidays = {
+        '2026-01-01': {'hours': 8, 'description': 'New Year\'s Day'},
+        '2026-01-02': {'hours': 8, 'description': 'New Year\'s Day'},
+        '2026-01-19': {'hours': 8, 'description': 'Martin Luther King Jr Day'},
+        '2026-02-16': {'hours': 8, 'description': 'Presidents\' Day'},
+        '2026-04-03': {'hours': 8, 'description': 'Good Friday'},
+        '2026-05-22': {'hours': 8, 'description': 'Memorial Day'},
+        '2026-05-25': {'hours': 8, 'description': 'Memorial Day'},
+        '2026-06-19': {'hours': 8, 'description': 'Juneteenth'},
+        '2026-07-02': {'hours': 8, 'description': 'Fourth of July'},
+        '2026-07-03': {'hours': 8, 'description': 'Fourth of July'},
+        '2026-09-04': {'hours': 8, 'description': 'Labor Day'},
+        '2026-09-07': {'hours': 8, 'description': 'Labor Day'},
+        '2026-11-25': {'hours': 8, 'description': 'Thanksgiving'},
+        '2026-11-26': {'hours': 8, 'description': 'Thanksgiving'},
+        '2026-11-27': {'hours': 8, 'description': 'Thanksgiving'},
+        '2026-12-24': {'hours': 8, 'description': 'Christmas Eve'},
+        '2026-12-25': {'hours': 8, 'description': 'Christmas'},
+        '2026-12-28': {'hours': 8, 'description': 'Holiday Break'},
+        '2026-12-29': {'hours': 8, 'description': 'Holiday Break'},
+        '2026-12-30': {'hours': 8, 'description': 'Holiday Break'},
+        '2026-12-31': {'hours': 8, 'description': 'New Year\'s Eve'}
+    }
+    
+    return jsonify({
+        'success': True,
+        'holidays': holidays
+    })
+
 @app.route('/api/month-info/<int:year>/<int:month>')
 def get_month_info(year, month):
     """Get information about a specific month (weeks, work days, etc.)"""
@@ -486,6 +597,8 @@ def get_month_info(year, month):
         
         # Calculate work days per week
         week_info = []
+        week_number = 1  # Track actual week numbers separately
+        
         for i, week_start in enumerate(weeks):
             week_end = week_start + timedelta(days=6)
             work_days = 0
@@ -498,12 +611,15 @@ def get_month_info(year, month):
                     check_date.weekday() < 5):  # Monday=0, Friday=4
                     work_days += 1
             
-            week_info.append({
-                'week_number': i + 1,
-                'start_date': week_start.strftime('%Y-%m-%d'),
-                'end_date': week_end.strftime('%Y-%m-%d'), 
-                'work_days': work_days
-            })
+            # Only include weeks with at least 1 work day
+            if work_days > 0:
+                week_info.append({
+                    'week_number': week_number,
+                    'start_date': week_start.strftime('%Y-%m-%d'),
+                    'end_date': week_end.strftime('%Y-%m-%d'), 
+                    'work_days': work_days
+                })
+                week_number += 1  # Increment only when we add a week
         
         return jsonify({
             'weeks': week_info,

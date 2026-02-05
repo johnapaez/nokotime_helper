@@ -1,0 +1,58 @@
+{
+  "profile_name": "December 2025",
+  "year": 2025,
+  "month": 12,
+  "created_date": "2026-01-09T09:54:33.907024",
+  "weekly_data": {
+    "week_1": {
+      "cinesys_legacy": 50,
+      "cinesys_c": 10,
+      "gcp_migration": 20,
+      "google_safety_tracker_gst": 10,
+      "administration": 10
+    },
+    "week_2": {
+      "cinesys_legacy": 50,
+      "gcp_migration": 10,
+      "administration": 20,
+      "general_support_it": 20
+    },
+    "week_3": {
+      "cinesys_legacy": 60,
+      "administration": 20,
+      "gcp_migration": 20
+    },
+    "week_4": {
+      "espn_bet": 10,
+      "gcp_migration": 15,
+      "cinesys_legacy": 75
+    },
+    "week_5": {}
+  },
+  "time_off_data": {
+    "2025-12-24": {
+      "hours": 8,
+      "description": "OOO - Holiday"
+    },
+    "2025-12-25": {
+      "hours": 8,
+      "description": "OOO - Holiday"
+    },
+    "2025-12-26": {
+      "hours": 8,
+      "description": "OOO - Holiday"
+    },
+    "2025-12-29": {
+      "hours": 8,
+      "description": "OOO - Holiday"
+    },
+    "2025-12-30": {
+      "hours": 8,
+      "description": "OOO - Holiday"
+    },
+    "2025-12-31": {
+      "hours": 8,
+      "description": "OOO - Holiday"
+    }
+  }
+}

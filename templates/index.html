@@ -168,6 +168,7 @@
         
         .selected-project-item {
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
             background: white;
@@ -179,7 +180,7 @@
         }
         
         .project-info {
-            flex: 1;
+            flex: 0 0 200px;
             display: flex;
             flex-direction: column;
             gap: 2px;
@@ -199,6 +200,15 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            flex: 0 0 auto;
+        }
+        
+        .project-metadata {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex: 1 1 auto;
+            min-width: 300px;
         }
         
         .percentage-display {
@@ -492,7 +502,7 @@
             <!-- Time Off Section -->
             <div class="time-off-section">
                 <h2>🏖️ Time Off / Special Days</h2>
-                <p style="margin-bottom: 15px; color: #666;">Add time off first to calculate available work hours for each week</p>
+                <p style="margin-bottom: 15px; color: #666;">Review pre-loaded holidays and add any additional time off</p>
                 <div id="time-off-entries">
                     <!-- Populated dynamically -->
                 </div>
@@ -629,7 +639,13 @@
                     return;
                 }
                 
-                createTimeOffSection();
+                // Load holidays for this month if year is 2026
+                if (parseInt(year) === 2026) {
+                    await loadHolidaysForMonth(parseInt(month));
+                } else {
+                    createTimeOffSection();
+                }
+                
                 showAlert(`Loaded ${monthInfo.month_name} ${year} - ${monthInfo.weeks.length} weeks. Add time off first!`, 'success');
                 
                 // Hide other sections until time off is processed
@@ -638,6 +654,68 @@
                 document.getElementById('preview-section').classList.add('hidden');
             } catch (error) {
                 showAlert('Error loading month: ' + error.message, 'error');
+            }
+        }
+        
+        async function loadHolidaysForMonth(month) {
+            try {
+                const response = await fetch('/api/us-holidays-2026');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const container = document.getElementById('time-off-entries');
+                    container.innerHTML = ''; // Clear existing entries
+                    
+                    // Filter holidays for the selected month
+                    const monthHolidays = Object.keys(result.holidays)
+                        .filter(date => {
+                            const holidayMonth = parseInt(date.split('-')[1]);
+                            return holidayMonth === month;
+                        })
+                        .sort();
+                    
+                    if (monthHolidays.length === 0) {
+                        // No holidays in this month, create empty entry
+                        createTimeOffSection();
+                        return;
+                    }
+                    
+                    monthHolidays.forEach(date => {
+                        const holiday = result.holidays[date];
+                        const div = document.createElement('div');
+                        div.className = 'time-off-item';
+                        div.innerHTML = `
+                            <input type="date" value="${date}" class="time-off-date">
+                            <select class="time-off-hours">
+                                <option value="">Hours...</option>
+                                <option value="0.5">0.5 hours</option>
+                                <option value="1">1.0 hours</option>
+                                <option value="1.5">1.5 hours</option>
+                                <option value="2">2.0 hours</option>
+                                <option value="2.5">2.5 hours</option>
+                                <option value="3">3.0 hours</option>
+                                <option value="3.5">3.5 hours</option>
+                                <option value="4">4.0 hours</option>
+                                <option value="4.5">4.5 hours</option>
+                                <option value="5">5.0 hours</option>
+                                <option value="5.5">5.5 hours</option>
+                                <option value="6">6.0 hours</option>
+                                <option value="6.5">6.5 hours</option>
+                                <option value="7">7.0 hours</option>
+                                <option value="7.5">7.5 hours</option>
+                                <option value="8" selected>8.0 hours (Full Day)</option>
+                            </select>
+                            <input type="text" value="${holiday.description}" class="time-off-desc">
+                            <button class="btn btn-danger" onclick="removeTimeOffEntry(this)">Remove</button>
+                        `;
+                        container.appendChild(div);
+                    });
+                    
+                    console.log(`Loaded ${monthHolidays.length} holidays for month ${month}`);
+                }
+            } catch (error) {
+                console.error('Error loading holidays:', error);
+                createTimeOffSection();
             }
         }
         
@@ -737,6 +815,19 @@
                            step="0.5"
                            onchange="updateWeekTotal(${weekNumber})">
                     <span class="percentage-display">%</span>
+                </div>
+                <div class="project-metadata">
+                    <select class="tags-select" style="padding: 4px 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 0.9rem; margin-right: 5px;">
+                        <option value="">Tag...</option>
+                        <option value="development">development</option>
+                        <option value="productionsupport">productionsupport</option>
+                        <option value="QA">QA</option>
+                        <option value="other">other</option>
+                    </select>
+                    <input type="text" 
+                           class="description-input" 
+                           placeholder="Description..." 
+                           style="padding: 4px 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 0.9rem; min-width: 200px; margin-right: 5px;">
                 </div>
                 <button class="btn btn-danger btn-small" onclick="removeProjectFromWeek(${weekNumber}, '${projectKey}')">×</button>
             `;
@@ -1280,6 +1371,8 @@
             previousProjects.forEach(projectItem => {
                 const projectKey = projectItem.getAttribute('data-project');
                 const percentage = parseFloat(projectItem.querySelector('.percentage-input-small').value);
+                const tags = projectItem.querySelector('.tags-select') ? projectItem.querySelector('.tags-select').value : '';
+                const description = projectItem.querySelector('.description-input') ? projectItem.querySelector('.description-input').value : '';
                 const project = projects[projectKey];
                 
                 if (project && percentage > 0) {
@@ -1301,6 +1394,20 @@
                                    step="0.5"
                                    onchange="updateWeekTotal(${weekNumber})">
                             <span class="percentage-display">%</span>
+                        </div>
+                        <div class="project-metadata">
+                            <select class="tags-select" style="padding: 4px 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 0.9rem; margin-right: 5px;">
+                                <option value="">Tag...</option>
+                                <option value="development" ${tags === 'development' ? 'selected' : ''}>development</option>
+                                <option value="productionsupport" ${tags === 'productionsupport' ? 'selected' : ''}>productionsupport</option>
+                                <option value="QA" ${tags === 'QA' ? 'selected' : ''}>QA</option>
+                                <option value="other" ${tags === 'other' ? 'selected' : ''}>other</option>
+                            </select>
+                            <input type="text" 
+                                   class="description-input" 
+                                   placeholder="Description..." 
+                                   value="${description}"
+                                   style="padding: 4px 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 0.9rem; min-width: 200px; margin-right: 5px;">
                         </div>
                         <button class="btn btn-danger btn-small" onclick="removeProjectFromWeek(${weekNumber}, '${projectKey}')">×</button>
                     `;
@@ -1326,8 +1433,10 @@
                 return;
             }
             
-            // Collect weekly data
+            // Collect weekly data and project metadata (tags & descriptions)
             const weeklyData = {};
+            const projectMetadata = {};
+            
             monthInfo.weeks.forEach(week => {
                 const weekData = {};
                 const container = document.getElementById(`week-${week.week_number}-selected-projects`);
@@ -1337,8 +1446,18 @@
                     projectItems.forEach(item => {
                         const projectKey = item.getAttribute('data-project');
                         const percentageInput = item.querySelector('.percentage-input-small');
+                        const tagsSelect = item.querySelector('.tags-select');
+                        const descriptionInput = item.querySelector('.description-input');
+                        
                         if (projectKey && percentageInput) {
                             weekData[projectKey] = parseFloat(percentageInput.value) || 0;
+                            
+                            // Store tags and description for this project in this week
+                            const metadataKey = `week_${week.week_number}_${projectKey}`;
+                            projectMetadata[metadataKey] = {
+                                tags: tagsSelect ? tagsSelect.value : '',
+                                description: descriptionInput ? descriptionInput.value : ''
+                            };
                         }
                     });
                 }
@@ -1375,7 +1494,8 @@
                         year: parseInt(year),
                         month: parseInt(month),
                         weekly_data: weeklyData,
-                        time_off_data: timeOffData
+                        time_off_data: timeOffData,
+                        project_metadata: projectMetadata
                     })
                 });
                 
@@ -1439,6 +1559,8 @@
             
             // Collect current data
             const weeklyData = {};
+            const projectMetadata = {};
+            
             monthInfo.weeks.forEach(week => {
                 const weekData = {};
                 const container = document.getElementById(`week-${week.week_number}-selected-projects`);
@@ -1448,8 +1570,18 @@
                     projectItems.forEach(item => {
                         const projectKey = item.getAttribute('data-project');
                         const percentageInput = item.querySelector('.percentage-input-small');
+                        const tagsSelect = item.querySelector('.tags-select');
+                        const descriptionInput = item.querySelector('.description-input');
+                        
                         if (projectKey && percentageInput) {
                             weekData[projectKey] = parseFloat(percentageInput.value) || 0;
+                            
+                            // Store tags and description for this project in this week
+                            const metadataKey = `week_${week.week_number}_${projectKey}`;
+                            projectMetadata[metadataKey] = {
+                                tags: tagsSelect ? tagsSelect.value : '',
+                                description: descriptionInput ? descriptionInput.value : ''
+                            };
                         }
                     });
                 }
@@ -1483,7 +1615,8 @@
                         year: parseInt(year),
                         month: parseInt(month),
                         weekly_data: weeklyData,
-                        time_off_data: timeOffData
+                        time_off_data: timeOffData,
+                        project_metadata: projectMetadata
                     })
                 });
                 
@@ -1578,6 +1711,10 @@
                                         const project = projects[projectKey];
                                         
                                         if (project && percentage > 0) {
+                                            // Get metadata for this project/week
+                                            const metadataKey = `week_${weekNumber}_${projectKey}`;
+                                            const metadata = (profile.project_metadata && profile.project_metadata[metadataKey]) || {tags: '', description: ''};
+                                            
                                             const newProjectDiv = document.createElement('div');
                                             newProjectDiv.className = 'selected-project-item';
                                             newProjectDiv.setAttribute('data-project', projectKey);
@@ -1595,6 +1732,20 @@
                                                            step="0.5"
                                                            onchange="updateWeekTotal(${weekNumber})">
                                                     <span class="percentage-display">%</span>
+                                                </div>
+                                                <div class="project-metadata">
+                                                    <select class="tags-select" style="padding: 4px 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 0.9rem; margin-right: 5px;">
+                                                        <option value="">Tag...</option>
+                                                        <option value="development" ${metadata.tags === 'development' ? 'selected' : ''}>development</option>
+                                                        <option value="productionsupport" ${metadata.tags === 'productionsupport' ? 'selected' : ''}>productionsupport</option>
+                                                        <option value="QA" ${metadata.tags === 'QA' ? 'selected' : ''}>QA</option>
+                                                        <option value="other" ${metadata.tags === 'other' ? 'selected' : ''}>other</option>
+                                                    </select>
+                                                    <input type="text" 
+                                                           class="description-input" 
+                                                           placeholder="Description..." 
+                                                           value="${metadata.description || ''}"
+                                                           style="padding: 4px 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 0.9rem; min-width: 200px; margin-right: 5px;">
                                                 </div>
                                                 <button class="btn btn-danger btn-small" onclick="removeProjectFromWeek(${weekNumber}, '${projectKey}')">×</button>
                                             `;

@@ -1,0 +1,58 @@
+{
+  "profile_name": "October 2025",
+  "year": 2025,
+  "month": 10,
+  "created_date": "2025-11-05T14:38:41.394920",
+  "weekly_data": {
+    "week_1": {
+      "cinesys_c": 5,
+      "cinesys_legacy": 60,
+      "personas": 15,
+      "administration": 10,
+      "general_support_it": 10
+    },
+    "week_2": {
+      "general_support_it": 25,
+      "personas": 10,
+      "cinesys_legacy": 50,
+      "administration": 15
+    },
+    "week_3": {
+      "google_safety_tracker_gst": 5,
+      "general_support_it": 15,
+      "personas": 15,
+      "administration": 15,
+      "cinesys_legacy": 50
+    },
+    "week_4": {
+      "security_operations_secops": 5,
+      "general_support_it": 15,
+      "personas": 15,
+      "administration": 10,
+      "cinesys_legacy": 55
+    },
+    "week_5": {
+      "administration": 20,
+      "general_support_it": 20,
+      "cinesys_legacy": 60
+    }
+  },
+  "time_off_data": {
+    "2025-10-03": {
+      "hours": 8,
+      "description": "OOO - Hawaii"
+    },
+    "2025-10-17": {
+      "hours": 8,
+      "description": "OOO - Las Vegas"
+    },
+    "2025-10-20": {
+      "hours": 8,
+      "description": "OOO - Las Vegas"
+    },
+    "2025-10-13": {
+      "hours": 8,
+      "description": "Holiday - Indigenous Peoples Day"
+    }
+  }
+}
