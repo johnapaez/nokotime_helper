@@ -222,8 +222,11 @@ def calculate_time_entries(year, month, weekly_data, time_off_data, projects_con
     
     print(f"Week registration days: {[d[0].strftime('%Y-%m-%d') for d in week_registration_days]}")
     
-    for current_date, week_index in week_registration_days:
+    for reg_index, (current_date, week_index) in enumerate(week_registration_days):
         date_str = current_date.strftime('%Y-%m-%d')
+        # reg_index (0-based position in registration days list) maps to profile "week_N" keys.
+        # week_index is the index into the full weeks[] array and is only used for
+        # week_start lookup when computing available hours — not for profile key lookups.
             
         # Add time off entry if present (but don't skip project processing)
         if date_str in time_off_data:
@@ -251,10 +254,10 @@ def calculate_time_entries(year, month, weekly_data, time_off_data, projects_con
             entries.append(entry)
             # Continue to process project time for this day as well
         
-        if f"week_{week_index + 1}" not in weekly_data:
+        if f"week_{reg_index + 1}" not in weekly_data:
             continue
             
-        week_data = weekly_data[f"week_{week_index + 1}"]
+        week_data = weekly_data[f"week_{reg_index + 1}"]
         
         # Calculate available work hours for this week (accounting for time off)
         week_start = weeks[week_index]
@@ -331,7 +334,7 @@ def calculate_time_entries(year, month, weekly_data, time_off_data, projects_con
             minutes = int(hours * 60)
             
             # Get custom tags and description from metadata if provided
-            week_key = f"week_{week_index + 1}"
+            week_key = f"week_{reg_index + 1}"
             metadata_key = f"{week_key}_{project_key}"
             custom_tags = ""
             custom_description = ""
@@ -469,6 +472,7 @@ def save_profile():
         month = data['month']
         weekly_data = data['weekly_data']
         time_off_data = data.get('time_off_data', {})
+        project_metadata = data.get('project_metadata', {})
         
         profile = {
             'profile_name': profile_name,
@@ -476,7 +480,8 @@ def save_profile():
             'month': month,
             'created_date': datetime.now().isoformat(),
             'weekly_data': weekly_data,
-            'time_off_data': time_off_data
+            'time_off_data': time_off_data,
+            'project_metadata': project_metadata
         }
         
         # Create profiles directory if it doesn't exist

@@ -1,0 +1,42 @@
+{
+  "profile_name": "February 2026",
+  "year": 2026,
+  "month": 2,
+  "created_date": "2026-03-05T00:40:27.319159",
+  "weekly_data": {
+    "week_1": {
+      "cinesys_legacy": 65,
+      "engineering_ops": 20,
+      "general_support_it": 10,
+      "copilot_cp": 5
+    },
+    "week_2": {
+      "cinesys_legacy": 75,
+      "engineering_ops": 15,
+      "general_support_it": 10
+    },
+    "week_3": {
+      "ai": 45,
+      "cinesys_legacy": 25,
+      "general_support_it": 10,
+      "engineering_ops": 10,
+      "administration": 10
+    },
+    "week_4": {
+      "ai": 35,
+      "cinesys_legacy": 25,
+      "engineering_ops": 15,
+      "administration": 25
+    }
+  },
+  "time_off_data": {
+    "2026-02-16": {
+      "hours": 8,
+      "description": "Presidents' Day"
+    },
+    "2026-02-23": {
+      "hours": 8,
+      "description": "OOO Sick"
+    }
+  }
+}
